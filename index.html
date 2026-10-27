@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Vocabulary">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="description" content="Build your English vocabulary, grammar and speaking confidence every day.">
+  <title>Vocabulary — Your English Journey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/grammar.css">
+  <script src="js/grammar-data-basics.js" defer></script>
+  <script src="js/grammar-data-verbs.js" defer></script>
+  <script src="js/grammar-data-sentences.js" defer></script>
+  <script src="js/grammar.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/pwa.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Vocabulary home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.8A2.8 2.8 0 0 1 6.8 3H20v16H6.8A2.8 2.8 0 0 0 4 21V5.8Z"/><path d="M4 6v15M8 7h8M8 11h6"/></svg></span>
+        <span>Vocabulary<span class="brand-dot">.</span><small>YOUR ENGLISH JOURNEY</small></span>
+      </a>
+      <div class="side-label">YOUR SPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="home"><span class="nav-icon">⌂</span>Home</button>
+        <button class="nav-item" data-view="learn"><span class="nav-icon">▤</span>Learn</button>
+        <button class="nav-item" data-view="explorer"><span class="nav-icon">⌕</span>Word Explorer</button>
+        <button class="nav-item" data-view="grammar"><span class="nav-icon">✎</span>Grammar Academy</button>
+        <button class="nav-item" data-view="progress"><span class="nav-icon">↗</span>My Progress</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="streak-card"><span class="streak-emoji">✦</span><div><strong>Your journey starts today</strong><p>Small steps. Big progress.</p></div></div>
+        <div class="profile-mini"><div class="avatar">V</div><div><strong>English Learner</strong><span>Begin your journey</span></div><span class="more">•••</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-brand" data-view="home"><span class="brand-mark small">V</span><strong>Vocabulary<span class="brand-dot">.</span></strong></button>
+        <div class="topbar-spacer"></div>
+        <button class="icon-button" id="search-shortcut" aria-label="Open word search" title="Search a word">⌕</button>
+        <button class="streak-pill" aria-label="Current streak"><span>✦</span> Start your streak</button>
+        <button class="avatar top-avatar" aria-label="Profile">V</button>
+      </header>
+
+      <section class="view active" id="view-home">
+        <div class="welcome-row">
+          <div><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR PERSONAL LEARNING SPACE</div><h1>Make English<br><span>your superpower.</span></h1><p class="hero-copy">A little learning every day can take you a long way.</p></div>
+          <div class="hero-orb" aria-hidden="true"><div class="orb-ring ring-one"></div><div class="orb-ring ring-two"></div><div class="orb-core"><span>V</span></div><span class="orb-spark spark-one">✦</span><span class="orb-spark spark-two">✧</span></div>
+        </div>
+
+        <section class="daily-card">
+          <div class="daily-content"><div class="card-kicker"><span class="sun-icon">✦</span> YOUR DAILY QUEST</div><h2>Ready for a little progress?</h2><p>Choose a skill and make today count.</p><div class="daily-meta"><span class="meta-chip">◷ &nbsp;5–10 min a day</span><span class="meta-chip">✧ &nbsp;Your pace, your path</span></div></div>
+          <div class="quest-art" aria-hidden="true"><div class="quest-circle"><span>✦</span></div><div class="quest-star star-a">✧</div><div class="quest-star star-b">✦</div></div>
+        </section>
+
+        <div class="section-heading"><div><div class="eyebrow">PICK YOUR PATH</div><h2>What would you like to improve?</h2></div><span class="section-note">Three skills. One stronger you.</span></div>
+        <div class="skill-grid">
+          <button class="skill-card vocabulary-card" data-view="explorer"><span class="skill-top"><span class="skill-symbol">Aa</span><span class="round-arrow">↗</span></span><span class="skill-title">Vocabulary</span><span class="skill-description">Discover words. Express more.</span><span class="skill-footer"><span class="skill-tag">WORD POWER</span><span class="mini-line"><i></i><i></i><i></i><i></i><i></i></span></span><span class="card-glow"></span></button>
+          <button class="skill-card grammar-card" data-view="grammar"><span class="skill-top"><span class="skill-symbol"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5zM8 8h8M8 12h6M8 16h4"/></svg></span><span class="round-arrow">↗</span></span><span class="skill-title">Grammar Academy</span><span class="skill-description">15 topics, easy Hinglish lessons aur quizzes.</span><span class="ga-card-bar" aria-hidden="true"><i id="ga-home-bar"></i></span><span class="skill-footer"><span class="skill-tag" id="ga-home-progress">0 / 15 LESSONS</span><span class="mini-line"><i></i><i></i><i></i><i></i><i></i></span></span><span class="card-glow"></span></button>
+          <button class="skill-card speaking-card" data-view="learn"><span class="skill-top"><span class="skill-symbol"><svg viewBox="0 0 24 24"><path d="M12 3v11M8 7v7a4 4 0 0 0 8 0V7M5 12v2a7 7 0 0 0 14 0v-2M12 21v-3m-4 3h8"/></svg></span><span class="round-arrow">↗</span></span><span class="skill-title">Speaking</span><span class="skill-description">Turn what you know into what you say.</span><span class="skill-footer"><span class="skill-tag">SPEAK WITH EASE</span><span class="mini-line"><i></i><i></i><i></i><i></i><i></i></span></span><span class="card-glow"></span></button>
+        </div>
+
+        <div class="lower-grid">
+          <section class="panel word-panel"><div class="panel-heading"><div><div class="eyebrow">A WORD TO GET YOU STARTED</div><h2>Word of the day</h2></div><span class="tiny-badge">01 / DAILY</span></div><div class="word-of-day"><div><div class="word-line"><h3>Resilient</h3><button class="sound-button" id="speak-word" aria-label="Hear pronunciation">♫</button></div><span class="part-of-speech">adjective · /rɪˈzɪliənt/</span></div><span class="word-icon">✧</span></div><p class="meaning">Mushkil halat ke baad bhi sambhalne aur dobara koshish karne ki salahiyat.</p><div class="example-box"><span class="example-label">IN A SENTENCE</span><p>“She stayed resilient through every challenge.”</p><p class="translation">Woh har mushkil ke bawajood himmat se khadi rahi.</p></div><button class="text-link" data-view="explorer">Explore a word <span>→</span></button></section>
+          <section class="panel progress-panel"><div class="panel-heading"><div><div class="eyebrow">YOUR NEXT CHAPTER</div><h2>Your learning space</h2></div><span class="progress-orbit">✦</span></div><div class="progress-empty"><div class="empty-icon">↗</div><h3>Your progress starts here</h3><p>Explore a word or start a lesson. Your learning milestones can live here as you go.</p><button class="primary-button compact" data-view="explorer">Explore your first word <span>→</span></button></div></section>
+        </div>
+        <footer class="footer-note">Made for curious minds <span>✦</span> Keep showing up for yourself.</footer>
+      </section>
+
+      <section class="view" id="view-explorer">
+        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> WORDS OPEN WORLDS</div><h1>Word <span>Explorer.</span></h1><p>Find a word. Understand its meaning. Make it yours.</p></div>
+        <section class="search-panel">
+          <label for="word-input">Which word are you curious about?</label>
+          <form id="word-search-form" class="search-form"><span class="search-icon">⌕</span><input id="word-input" type="search" placeholder="Try “ambitious”, “serendipity”..." autocomplete="off" required><button class="primary-button" type="submit">Explore word <span>→</span></button></form>
+          <div class="search-hint">Try any English word. We'll show available meanings and examples.</div>
+        </section>
+        <div id="word-result" class="word-result"><div class="result-placeholder"><div class="placeholder-icon">Aa</div><h2>Your next favourite word is waiting.</h2><p>Search for an English word to explore its meanings, examples and pronunciation.</p><div class="suggestion-list"><button data-word="curious">curious <span>↗</span></button><button data-word="ambitious">ambitious <span>↗</span></button><button data-word="resilient">resilient <span>↗</span></button><button data-word="serendipity">serendipity <span>↗</span></button></div></div></div>
+        <footer class="footer-note">One word at a time, one step at a time. <span>✦</span></footer>
+      </section>
+
+      <section class="view" id="view-learn">
+        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR SKILLS, YOUR PACE</div><h1>Learn something <span>today.</span></h1><p>Small, consistent practice is where confidence begins.</p></div>
+        <div class="coming-grid"><article class="coming-card"><span class="coming-icon">Aa</span><span class="skill-tag">VOCABULARY</span><h2>Build your word power</h2><p>Learn useful words, explore meanings and revise what you discover.</p><button class="text-link" data-view="explorer">Open Word Explorer <span>→</span></button></article><article class="coming-card"><span class="coming-icon">文</span><span class="skill-tag">GRAMMAR</span><h2>Make sentences clearer</h2><p>Understand grammar rules through simple lessons and practical examples.</p><button class="text-link" data-view="grammar">Open Grammar Academy <span>→</span></button></article><article class="coming-card"><span class="coming-icon">♫</span><span class="skill-tag">SPEAKING</span><h2>Find your voice</h2><p>Build confidence with everyday phrases and guided speaking practice.</p><span class="planned-label">Speaking module planned</span></article></div>
+        <footer class="footer-note">The learning modules will be built step by step. <span>✦</span></footer>
+      </section>
+
+      <section class="view" id="view-grammar">
+        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> GRAMMAR ACADEMY</div><h1>Grammar <span>Academy.</span></h1><p>Easy Hinglish lessons, real examples aur quizzes. Ek-ek step mein.</p></div>
+        <div id="grammar-root" class="ga-root"><div class="ga-error"><p>Loading lessons…</p></div></div>
+        <noscript><p class="footer-note">Grammar Academy chalane ke liye JavaScript on karo.</p></noscript>
+        <footer class="footer-note">Roz thoda practice, bade nateeje. <span>✦</span></footer>
+      </section>
+
+      <section class="view" id="view-progress">
+        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> EVERY STEP COUNTS</div><h1>Your progress <span>journey.</span></h1><p>Your learning dashboard will grow as you start practising.</p></div>
+        <div class="progress-overview"><div class="progress-stat"><span class="stat-icon">Aa</span><strong>—</strong><span>Words learned</span></div><div class="progress-stat"><span class="stat-icon">✓</span><strong>—</strong><span>Practice accuracy</span></div><div class="progress-stat"><span class="stat-icon">✦</span><strong>0</strong><span>Day streak</span></div></div>
+        <div class="panel progress-empty large-empty">
+          <div class="panel-heading">
+            <div>
+              <div class="eyebrow">YOUR COLLECTION</div>
+              <h2>Saved Words</h2>
+            </div>
+            <span class="tiny-badge" id="saved-word-count">0 WORDS</span>
+          </div>
+
+          <div id="saved-words-list">
+            <div class="empty-icon">Aa</div>
+            <h3>No saved words yet</h3>
+            <p>Explore a word and tap Save Word to build your personal collection.</p>
+            <button class="primary-button" data-view="explorer">
+              Explore words <span>→</span>
+            </button>
+          </div>
+        </div>
+        <footer class="footer-note">Progress, not perfection. <span>✦</span></footer>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
