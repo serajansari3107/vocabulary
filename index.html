@@ -18,10 +18,13 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/grammar.css">
+  <link rel="stylesheet" href="css/speaking.css">
   <script src="js/grammar-data-basics.js" defer></script>
   <script src="js/grammar-data-verbs.js" defer></script>
   <script src="js/grammar-data-sentences.js" defer></script>
   <script src="js/grammar.js" defer></script>
+  <script src="js/speaking-data.js" defer></script>
+  <script src="js/speaking.js" defer></script>
   <script src="js/app.js" defer></script>
   <script src="js/pwa.js" defer></script>
 </head>
@@ -93,7 +96,7 @@
 
       <section class="view" id="view-learn">
         <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR SKILLS, YOUR PACE</div><h1>Learn something <span>today.</span></h1><p>Small, consistent practice is where confidence begins.</p></div>
-        <div class="coming-grid"><article class="coming-card"><span class="coming-icon">Aa</span><span class="skill-tag">VOCABULARY</span><h2>Build your word power</h2><p>Learn useful words, explore meanings and revise what you discover.</p><button class="text-link" data-view="explorer">Open Word Explorer <span>→</span></button></article><article class="coming-card"><span class="coming-icon">文</span><span class="skill-tag">GRAMMAR</span><h2>Make sentences clearer</h2><p>Understand grammar rules through simple lessons and practical examples.</p><button class="text-link" data-view="grammar">Open Grammar Academy <span>→</span></button></article><article class="coming-card"><span class="coming-icon">♫</span><span class="skill-tag">SPEAKING</span><h2>Find your voice</h2><p>Build confidence with everyday phrases and guided speaking practice.</p><span class="planned-label">Speaking module planned</span></article></div>
+        <div class="coming-grid"><article class="coming-card"><span class="coming-icon">Aa</span><span class="skill-tag">VOCABULARY</span><h2>Build your word power</h2><p>Learn useful words, explore meanings and revise what you discover.</p><button class="text-link" data-view="explorer">Open Word Explorer <span>→</span></button></article><article class="coming-card"><span class="coming-icon">文</span><span class="skill-tag">GRAMMAR</span><h2>Make sentences clearer</h2><p>Understand grammar rules through simple lessons and practical examples.</p><button class="text-link" data-view="grammar">Open Grammar Academy <span>→</span></button></article><article class="coming-card"><span class="coming-icon">♫</span><span class="skill-tag">SPEAKING</span><h2>Find your voice</h2><p>Build confidence with everyday phrases and guided speaking practice.</p><button class="text-link" data-view="speak">Open Speaking Studio <span>→</span></button></article></div>
         <footer class="footer-note">The learning modules will be built step by step. <span>✦</span></footer>
       </section>
 
@@ -107,6 +110,7 @@
       <section class="view" id="view-progress">
         <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> EVERY STEP COUNTS</div><h1>Your progress <span>journey.</span></h1><p>Your learning dashboard will grow as you start practising.</p></div>
         <div class="progress-overview"><div class="progress-stat"><span class="stat-icon">Aa</span><strong>—</strong><span>Words learned</span></div><div class="progress-stat"><span class="stat-icon">✓</span><strong>—</strong><span>Practice accuracy</span></div><div class="progress-stat"><span class="stat-icon">✦</span><strong>0</strong><span>Day streak</span></div></div>
+        <div id="speaking-progress"></div>
         <div class="panel progress-empty large-empty">
           <div class="panel-heading">
             <div>
@@ -129,15 +133,9 @@
       </section>
 
       <section class="view" id="view-speak">
-        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> SPEAKING STUDIO</div><h1>Speak <span>with ease.</span></h1><p>Speaking Studio is on its way. Tab to wapas aao, tab tak words aur grammar mazboot karo.</p></div>
-        <div class="result-placeholder speak-soon">
-          <div class="placeholder-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M8 7v7a4 4 0 0 0 8 0V7M5 12v2a7 7 0 0 0 14 0v-2M12 21v-3m-4 3h8"/></svg></div>
-          <span class="skill-tag">COMING SOON</span>
-          <h2>Speaking Studio is coming soon</h2>
-          <p>Everyday phrases aur guided speaking practice yahin milegi. Abhi yeh module build ho raha hai.</p>
-          <div class="suggestion-list"><button data-view="explorer">Open Word Explorer <span>→</span></button><button data-view="grammar">Open Grammar Academy <span>→</span></button></div>
-        </div>
-        <footer class="footer-note">Your voice matters. <span>✦</span> Good things take a little time.</footer>
+        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> SPEAKING STUDIO</div><h1>Speak <span>with ease.</span></h1><p>Roz ke useful sentences suno, bolo aur conversations practice karo.</p></div>
+        <div class="sp-root" id="speaking-root" aria-live="off"></div>
+        <footer class="footer-note">Your voice matters. <span>✦</span> Practice a little every day.</footer>
       </section>
 
       <section class="view" id="view-profile">
@@ -151,6 +149,7 @@
           <div class="profile-list">
             <button class="profile-row" data-view="progress"><span class="profile-row-text"><strong>Saved Words</strong><span>Aapki personal word collection</span></span><span class="tiny-badge" id="profile-saved-count">0 WORDS</span></button>
             <button class="profile-row" data-view="grammar"><span class="profile-row-text"><strong>Grammar Academy</strong><span>Lessons aur quiz progress</span></span><span class="tiny-badge" id="profile-grammar-progress">0 / 15 LESSONS</span></button>
+            <button class="profile-row" data-view="speak"><span class="profile-row-text"><strong>Speaking Studio</strong><span>Sentences aur conversation practice</span></span><span class="tiny-badge" id="profile-speaking-progress">0 / 120 SENTENCES</span></button>
             <button class="profile-row" data-view="progress"><span class="profile-row-text"><strong>My Progress</strong><span>Learning dashboard</span></span><span class="profile-chevron" aria-hidden="true">→</span></button>
           </div>
         </div>

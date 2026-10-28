@@ -1,8 +1,8 @@
 /* Vocabulary - service worker (offline support).
    Strategy: network first, so after you push an update the app shows it as soon as the phone is online;
-   if the network is missing or very slow, the last saved copy is used. Grammar Academy works fully offline.
+   if the network is missing or very slow, the last saved copy is used. Grammar Academy and Speaking Studio content work fully offline.
    Word Explorer's online dictionary lookups are never cached or touched (built-in words still work offline). */
-const CACHE = 'vocabulary-v2';
+const CACHE = 'vocabulary-v3';
 const NETWORK_TIMEOUT_MS = 4000;
 
 const SHELL = [
@@ -11,12 +11,15 @@ const SHELL = [
   'manifest.webmanifest',
   'css/style.css',
   'css/grammar.css',
+  'css/speaking.css',
   'js/app.js',
   'js/pwa.js',
   'js/grammar.js',
   'js/grammar-data-basics.js',
   'js/grammar-data-verbs.js',
   'js/grammar-data-sentences.js',
+  'js/speaking-data.js',
+  'js/speaking.js',
   'icons/icon-192.png',
   'icons/icon-512.png',
   'icons/icon-maskable-512.png',

@@ -303,8 +303,6 @@ h1 span { color: var(--accent-bright); }
 }
 /* ===== Mobile bottom navigation (hidden on desktop/tablet-wide) ===== */
 .bottom-nav { display: none; }
-.speak-soon .skill-tag { display: block; margin-bottom: 10px; }
-.speak-soon .placeholder-icon svg { width: 28px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .profile-card { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
 .profile-card strong { display: block; font-size: 15px; }
 .profile-card span { color: var(--muted); font-size: 11px; }

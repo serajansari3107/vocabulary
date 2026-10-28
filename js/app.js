@@ -25,6 +25,7 @@
     if (!target) return;
 
     views.forEach(view => view.classList.toggle('active', view === target));
+    if (window.VocabSpeaking) window.VocabSpeaking.stop(); // stop any speaking audio / microphone when the screen changes
     navItems.forEach(item => item.classList.toggle('active', item.dataset.view === name));
     bottomItems.forEach(item => {
       const on = item.dataset.view === bottomTabFor[name];
@@ -42,7 +43,10 @@
       setTimeout(() => $('#word-input')?.focus({ preventScroll: true }), 180);
     }
 
-    if (name === 'progress') renderSavedWords();
+    if (name === 'progress') {
+      renderSavedWords();
+      if (window.VocabSpeaking) window.VocabSpeaking.renderProgress();
+    }
     if (name === 'profile') updateProfile();
   }
 
@@ -51,6 +55,11 @@
     if (saved) {
       const total = getSavedWords().length;
       saved.textContent = `${total} WORD${total === 1 ? '' : 'S'}`;
+    }
+    const speaking = $('#profile-speaking-progress');
+    if (speaking && window.VocabSpeaking) {
+      const stats = window.VocabSpeaking.stats();
+      speaking.textContent = `${stats.sentencesDone} / ${stats.sentencesTotal} SENTENCES`;
     }
     const grammar = $('#profile-grammar-progress');
     const homeLabel = $('#ga-home-progress'); // kept up to date by Grammar Academy
