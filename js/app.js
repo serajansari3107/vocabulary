@@ -6,6 +6,9 @@
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const views = $$('.view');
   const navItems = $$('.nav-item');
+  const bottomItems = $$('.bn-item');
+  // Which bottom-nav tab owns each screen (Word Explorer and Grammar Academy live under Learn).
+  const bottomTabFor = { home: 'home', learn: 'learn', explorer: 'learn', grammar: 'learn', speak: 'speak', progress: 'progress', profile: 'profile' };
   const toast = $('#toast');
   let toastTimer;
 
@@ -23,6 +26,11 @@
 
     views.forEach(view => view.classList.toggle('active', view === target));
     navItems.forEach(item => item.classList.toggle('active', item.dataset.view === name));
+    bottomItems.forEach(item => {
+      const on = item.dataset.view === bottomTabFor[name];
+      item.classList.toggle('active', on);
+      if (on) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current');
+    });
 
     try {
       localStorage.setItem('vocabulary_last_view', name);
@@ -35,6 +43,18 @@
     }
 
     if (name === 'progress') renderSavedWords();
+    if (name === 'profile') updateProfile();
+  }
+
+  function updateProfile() {
+    const saved = $('#profile-saved-count');
+    if (saved) {
+      const total = getSavedWords().length;
+      saved.textContent = `${total} WORD${total === 1 ? '' : 'S'}`;
+    }
+    const grammar = $('#profile-grammar-progress');
+    const homeLabel = $('#ga-home-progress'); // kept up to date by Grammar Academy
+    if (grammar && homeLabel) grammar.textContent = homeLabel.textContent;
   }
 
   document.addEventListener('click', event => {

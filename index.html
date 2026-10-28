@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0e0e11">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -70,7 +70,7 @@
         <div class="skill-grid">
           <button class="skill-card vocabulary-card" data-view="explorer"><span class="skill-top"><span class="skill-symbol">Aa</span><span class="round-arrow">↗</span></span><span class="skill-title">Vocabulary</span><span class="skill-description">Discover words. Express more.</span><span class="skill-footer"><span class="skill-tag">WORD POWER</span><span class="mini-line"><i></i><i></i><i></i><i></i><i></i></span></span><span class="card-glow"></span></button>
           <button class="skill-card grammar-card" data-view="grammar"><span class="skill-top"><span class="skill-symbol"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5zM8 8h8M8 12h6M8 16h4"/></svg></span><span class="round-arrow">↗</span></span><span class="skill-title">Grammar Academy</span><span class="skill-description">15 topics, easy Hinglish lessons aur quizzes.</span><span class="ga-card-bar" aria-hidden="true"><i id="ga-home-bar"></i></span><span class="skill-footer"><span class="skill-tag" id="ga-home-progress">0 / 15 LESSONS</span><span class="mini-line"><i></i><i></i><i></i><i></i><i></i></span></span><span class="card-glow"></span></button>
-          <button class="skill-card speaking-card" data-view="learn"><span class="skill-top"><span class="skill-symbol"><svg viewBox="0 0 24 24"><path d="M12 3v11M8 7v7a4 4 0 0 0 8 0V7M5 12v2a7 7 0 0 0 14 0v-2M12 21v-3m-4 3h8"/></svg></span><span class="round-arrow">↗</span></span><span class="skill-title">Speaking</span><span class="skill-description">Turn what you know into what you say.</span><span class="skill-footer"><span class="skill-tag">SPEAK WITH EASE</span><span class="mini-line"><i></i><i></i><i></i><i></i><i></i></span></span><span class="card-glow"></span></button>
+          <button class="skill-card speaking-card" data-view="speak"><span class="skill-top"><span class="skill-symbol"><svg viewBox="0 0 24 24"><path d="M12 3v11M8 7v7a4 4 0 0 0 8 0V7M5 12v2a7 7 0 0 0 14 0v-2M12 21v-3m-4 3h8"/></svg></span><span class="round-arrow">↗</span></span><span class="skill-title">Speaking</span><span class="skill-description">Turn what you know into what you say.</span><span class="skill-footer"><span class="skill-tag">SPEAK WITH EASE</span><span class="mini-line"><i></i><i></i><i></i><i></i><i></i></span></span><span class="card-glow"></span></button>
         </div>
 
         <div class="lower-grid">
@@ -127,8 +127,52 @@
         </div>
         <footer class="footer-note">Progress, not perfection. <span>✦</span></footer>
       </section>
+
+      <section class="view" id="view-speak">
+        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> SPEAKING STUDIO</div><h1>Speak <span>with ease.</span></h1><p>Speaking Studio is on its way. Tab to wapas aao, tab tak words aur grammar mazboot karo.</p></div>
+        <div class="result-placeholder speak-soon">
+          <div class="placeholder-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M8 7v7a4 4 0 0 0 8 0V7M5 12v2a7 7 0 0 0 14 0v-2M12 21v-3m-4 3h8"/></svg></div>
+          <span class="skill-tag">COMING SOON</span>
+          <h2>Speaking Studio is coming soon</h2>
+          <p>Everyday phrases aur guided speaking practice yahin milegi. Abhi yeh module build ho raha hai.</p>
+          <div class="suggestion-list"><button data-view="explorer">Open Word Explorer <span>→</span></button><button data-view="grammar">Open Grammar Academy <span>→</span></button></div>
+        </div>
+        <footer class="footer-note">Your voice matters. <span>✦</span> Good things take a little time.</footer>
+      </section>
+
+      <section class="view" id="view-profile">
+        <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR SPACE</div><h1>Your <span>profile.</span></h1><p>Aapka learning space aur app ki settings, ek jagah.</p></div>
+        <section class="panel profile-card">
+          <div class="avatar profile-avatar" aria-hidden="true">V</div>
+          <div><strong>English Learner</strong><span>Begin your journey</span></div>
+        </section>
+        <div class="panel profile-list-panel">
+          <div class="panel-heading"><div><div class="eyebrow">YOUR LEARNING</div><h2>Quick access</h2></div></div>
+          <div class="profile-list">
+            <button class="profile-row" data-view="progress"><span class="profile-row-text"><strong>Saved Words</strong><span>Aapki personal word collection</span></span><span class="tiny-badge" id="profile-saved-count">0 WORDS</span></button>
+            <button class="profile-row" data-view="grammar"><span class="profile-row-text"><strong>Grammar Academy</strong><span>Lessons aur quiz progress</span></span><span class="tiny-badge" id="profile-grammar-progress">0 / 15 LESSONS</span></button>
+            <button class="profile-row" data-view="progress"><span class="profile-row-text"><strong>My Progress</strong><span>Learning dashboard</span></span><span class="profile-chevron" aria-hidden="true">→</span></button>
+          </div>
+        </div>
+        <div class="panel profile-list-panel">
+          <div class="panel-heading"><div><div class="eyebrow">APP SETTINGS</div><h2>About this app</h2></div></div>
+          <div class="profile-list">
+            <div class="profile-row static"><span class="profile-row-text"><strong>Your data stays on this device</strong><span>Saved words aur grammar progress is browser mein save hote hain.</span></span></div>
+            <div class="profile-row static"><span class="profile-row-text"><strong>Install &amp; offline</strong><span>Browser menu se “Install app” ya “Add to Home Screen” chuno. Grammar Academy offline bhi chalti hai.</span></span></div>
+            <div class="profile-row static"><span class="profile-row-text"><strong>Theme, reminders, account</strong><span>Yeh settings abhi available nahi hain.</span></span><span class="tiny-badge">PLANNED</span></div>
+          </div>
+        </div>
+        <footer class="footer-note">Small steps. Big progress. <span>✦</span></footer>
+      </section>
     </main>
   </div>
+  <nav class="bottom-nav" id="bottom-nav" aria-label="Bottom navigation">
+    <button class="bn-item active" data-view="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11.2 12 4l8 7.2V19a1.5 1.5 0 0 1-1.5 1.5H15v-5.2H9v5.2H5.5A1.5 1.5 0 0 1 4 19v-7.8Z"/></svg><span>Home</span></button>
+    <button class="bn-item" data-view="learn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.8A2.8 2.8 0 0 1 6.8 3H20v16H6.8A2.8 2.8 0 0 0 4 21V5.8Z"/><path d="M4 6v15M8 7h8M8 11h6"/></svg><span>Learn</span></button>
+    <button class="bn-item" data-view="speak"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M8 7v7a4 4 0 0 0 8 0V7M5 12v2a7 7 0 0 0 14 0v-2M12 21v-3m-4 3h8"/></svg><span>Speak</span></button>
+    <button class="bn-item" data-view="progress"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l3.5-4 3 2.5L20 7"/></svg><span>Progress</span></button>
+    <button class="bn-item" data-view="profile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.7"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg><span>Profile</span></button>
+  </nav>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

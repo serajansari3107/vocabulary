@@ -2,7 +2,7 @@
    Strategy: network first, so after you push an update the app shows it as soon as the phone is online;
    if the network is missing or very slow, the last saved copy is used. Grammar Academy works fully offline.
    Word Explorer's online dictionary lookups are never cached or touched (built-in words still work offline). */
-const CACHE = 'vocabulary-v1';
+const CACHE = 'vocabulary-v2';
 const NETWORK_TIMEOUT_MS = 4000;
 
 const SHELL = [
