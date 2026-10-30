@@ -47,7 +47,10 @@
       renderSavedWords();
       if (window.VocabSpeaking) window.VocabSpeaking.renderProgress();
     }
-    if (name === 'profile') updateProfile();
+    if (name === 'profile') {
+      updateProfile();
+      if (window.VocabOffline) window.VocabOffline.renderProfile();
+    }
   }
 
   function updateProfile() {
@@ -284,56 +287,126 @@
       </div>`).join('');
   }
 
-  function renderWord(word, data, fromDictionary) {
+  const POS_LABELS = { n: 'noun', v: 'verb', adj: 'adjective', adv: 'adverb', prep: 'preposition', conj: 'conjunction', pron: 'pronoun', interj: 'interjection' };
+  const posLabel = value => POS_LABELS[String(value || '').toLowerCase()] || String(value || '').toLowerCase();
+
+  // Make synonym / "did you mean" chips searchable.
+  function wireWordChips(container) {
+    container.querySelectorAll('[data-syn]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const input = $('#word-input');
+        if (input) input.value = chip.dataset.syn;
+        searchWord(chip.dataset.syn);
+      });
+    });
+  }
+
+  /* source: 'offline' = local dictionary, 'legacy' = the old built-in sample words, 'online' = optional online lookup.
+     `data` is { senses: [{ pos, hi, syn, ex, exHi }] } for the offline dictionary, or { parts: [...] } for the others. */
+  function renderWord(word, data, source, via) {
     const result = $('#word-result');
     if (!result) return;
 
-    const saved = getSavedWords().includes(word.toLowerCase());
+    const headword = word.toLowerCase();
+    const saved = getSavedWords().includes(headword);
+    const senses = data.senses || data.parts.map(item => ({
+      pos: item.part, hi: '', hinglish: item.meaning, definition: item.definition, syn: [],
+      ex: item.example, exHi: source === 'legacy' ? item.translation : ''
+    }));
+    const isKnown = text => Boolean(window.VocabDictionary && window.VocabDictionary.has(text));
 
-    const parts = data.parts.map((item, index) => `
-      <article class="meaning-item">
-        <p><span class="sense-number">MEANING ${index + 1}</span>${escapeHTML(item.meaning)}</p>
-        ${item.meaning === item.definition ? '' : `<p class="english-definition">${escapeHTML(item.definition)}</p>`}
-        <div class="example-sentence">“${escapeHTML(item.example)}”</div>
-        <p class="example-translation">${escapeHTML(item.translation)}</p>
-      </article>`).join('');
+    const senseHtml = senses.map((sense, index) => {
+      const meaning = sense.hi
+        ? `<p class="hindi-meaning" lang="hi">${escapeHTML(sense.hi)}</p>`
+        : (sense.hinglish ? `<p class="hinglish-meaning">${escapeHTML(sense.hinglish)}</p>` : '');
+      const definition = !sense.hi && sense.definition && sense.definition !== sense.hinglish
+        ? `<p class="english-definition">${escapeHTML(sense.definition)}</p>` : '';
+      const synonyms = sense.syn && sense.syn.length ? `
+        <div class="syn-row">
+          <span class="syn-label">Synonyms</span>
+          <div class="syn-chips">${sense.syn.map(text => (isKnown(text)
+            ? `<button type="button" class="syn-chip" data-syn="${escapeHTML(text)}" title="Look up ${escapeHTML(text)}">${escapeHTML(text)}</button>`
+            : `<span class="syn-chip is-plain">${escapeHTML(text)}</span>`)).join('')}</div>
+        </div>` : '';
+      const example = sense.ex ? `
+        <div class="example-block">
+          <p class="example-sentence">“${escapeHTML(sense.ex)}”</p>
+          ${sense.exHi ? `<p class="example-translation" lang="${source === 'legacy' ? 'en' : 'hi'}">${escapeHTML(sense.exHi)}</p>` : ''}
+        </div>` : '';
+      return `
+        <section class="sense-block">
+          <div class="sense-head"><span class="pos-chip">${escapeHTML(posLabel(sense.pos))}</span>${senses.length > 1 ? `<span class="sense-no">${index + 1} of ${senses.length}</span>` : ''}</div>
+          ${meaning}${definition}${synonyms}${example}
+        </section>`;
+    }).join('');
+
+    const via_note = via && via.from
+      ? `<p class="via-note">Showing <strong>${escapeHTML(word)}</strong> for “${escapeHTML(via.from)}”.</p>` : '';
+    const note = source === 'offline'
+      ? 'Offline dictionary: this result works without internet.'
+      : source === 'legacy'
+        ? 'Meanings and examples from your built-in dictionary.'
+        : 'Online result. A Hindi meaning is not available for this word offline, and this result is not saved for offline use.';
 
     result.innerHTML = `
-      <article class="word-result-card">
+      <article class="word-result-card entry-card">
         <div class="result-top">
-          <div>
-            <h2>${escapeHTML(word.charAt(0).toUpperCase() + word.slice(1))}</h2>
-            <div class="result-pronunciation">${escapeHTML(data.phonetic || 'Pronunciation not available')}</div>
-          </div>
+          <h2>${escapeHTML(word.charAt(0).toUpperCase() + word.slice(1))}</h2>
           <div class="result-actions">
-            <button class="small-action" id="result-speak" aria-label="Hear word pronunciation" title="Hear pronunciation">♫</button>
-            <button class="small-action ${saved ? 'saved' : ''}" id="save-word" aria-label="${saved ? 'Remove saved word' : 'Save word'}" title="${saved ? 'Saved' : 'Save word'}">${saved ? '♥' : '♡'}</button>
+            <button class="small-action" id="result-speak" aria-label="Listen to the word" title="Listen">♫</button>
+            <button class="small-action ${saved ? 'saved' : ''}" id="save-word" aria-label="${saved ? 'Remove saved word' : 'Save word'}" aria-pressed="${saved}" title="${saved ? 'Saved' : 'Save word'}">${saved ? '♥' : '♡'}</button>
           </div>
         </div>
-        ${parts}
-        <p class="result-note">${fromDictionary
-          ? 'Meanings and examples from your built-in dictionary.'
-          : 'Meaning retrieved from the online dictionary. Hindi translations are machine-generated and may not be perfect.'}</p>
+        ${via_note}
+        ${senseHtml}
+        <p class="result-note">${escapeHTML(note)}</p>
       </article>`;
 
-    $('#result-speak')?.addEventListener('click', () => speakWord(word));
+    $('#result-speak')?.addEventListener('click', () => speakWord(headword));
 
     $('#save-word')?.addEventListener('click', () => {
       let words = getSavedWords();
-      const key = word.toLowerCase();
 
-      if (words.includes(key)) {
-        words = words.filter(item => item !== key);
+      if (words.includes(headword)) {
+        words = words.filter(item => item !== headword);
         showToast('Word removed from your saved list.');
       } else {
-        words.push(key);
+        words.push(headword);
         showToast('Word saved on this device.');
       }
 
       setSavedWords(words);
       renderSavedWords();
-      renderWord(word, data, fromDictionary);
+      renderWord(word, data, source, via);
     });
+
+    wireWordChips(result);
+  }
+
+  function renderNotFound(word, miss, reason) {
+    const result = $('#word-result');
+    if (!result) return;
+    const dictState = window.VocabDictionary ? window.VocabDictionary.getState() : null;
+    const incomplete = !dictState || dictState.phase !== 'ready';
+    const suggestions = (miss && miss.suggestions) || [];
+    const lines = [];
+    if (reason === 'offline') lines.push('Aap abhi offline ho, isliye online lookup nahi ho sakta.');
+    if (reason === 'unreachable') lines.push('Online lookup abhi kaam nahi kar raha.');
+    if (reason === 'missing') lines.push('Online dictionary mein bhi yeh word nahi mila. Spelling check karo.');
+    if (incomplete) lines.push('Offline dictionary abhi poori tarah setup nahi hui, isliye yeh word miss ho sakta hai. Internet se connect karke setup poora karo.');
+    if (!incomplete && reason !== 'missing') lines.push('Yeh word abhi offline dictionary mein available nahi hai. Spelling check karo ya koi aur word try karo.');
+
+    result.innerHTML = `
+      <article class="word-result-card entry-card">
+        <h3>“${escapeHTML(word)}” offline dictionary mein nahi mila</h3>
+        ${lines.map(line => `<p class="not-found-line">${escapeHTML(line)}</p>`).join('')}
+        ${suggestions.length ? `
+          <div class="syn-row">
+            <span class="syn-label">Did you mean</span>
+            <div class="syn-chips">${suggestions.map(text => `<button type="button" class="syn-chip" data-syn="${escapeHTML(text)}">${escapeHTML(text)}</button>`).join('')}</div>
+          </div>` : ''}
+      </article>`;
+    wireWordChips(result);
   }
 
   /* ------------------------------------------------------------------
@@ -630,107 +703,199 @@
     }
   }
 
+  // Optional online lookup for words that are not in the offline dictionary.
+  async function fetchOnlineEntry(normalized) {
+    const response = await fetch(
+      `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(normalized)}`
+    );
+    if (response.status === 404) return { missing: true };
+    if (!response.ok) throw new Error('Dictionary request failed');
+
+    const entries = await response.json();
+    const entry = entries[0];
+    if (!entry) throw new Error('No dictionary entry');
+
+    const rawParts = (entry.meanings || [])
+      .flatMap(meaning =>
+        (meaning.definitions || []).map(definition => ({
+          part: meaning.partOfSpeech || 'meaning',
+          definition: definition.definition || '',
+          example: definition.example || ''
+        }))
+      )
+      .slice(0, 3);
+    if (!rawParts.length) throw new Error('No definitions available');
+
+    // Roman-Hindi meaning only when the offline engine fully understands the definition; never a guess.
+    return {
+      parts: rawParts.map(item => ({
+        part: item.part,
+        meaning: hinglishMeaning(item.definition, item.part) || '',
+        definition: item.definition || 'Definition unavailable.',
+        example: item.example,
+        translation: ''
+      }))
+    };
+  }
+
   async function searchWord(rawWord) {
     const word = rawWord.trim().replace(/\s+/g, ' ');
     if (!word) return;
 
-    if (!/^[a-zA-Z][a-zA-Z'-]{0,59}$/.test(word)) {
+    if (!/^[a-zA-Z][a-zA-Z'\u2019-]{0,59}$/.test(word)) {
       showToast('Please enter one English word.');
       return;
     }
 
-    const normalized = word.toLowerCase();
+    hideSuggestions();
+    const normalized = word.toLowerCase().replace(/\u2019/g, "'");
     const result = $('#word-result');
     if (!result) return;
+    const reveal = () => result.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Existing sample words keep their original Hinglish meanings.
+    // 1) Offline dictionary (works without internet once setup is complete).
+    let miss = null;
+    if (window.VocabDictionary) {
+      try {
+        const found = await window.VocabDictionary.lookup(normalized);
+        if (found.status === 'found') {
+          renderWord(found.word, { senses: found.senses }, 'offline', found.via);
+          reveal();
+          return;
+        }
+        miss = found;
+      } catch (error) {
+        console.warn('Offline dictionary lookup failed:', error);
+      }
+    }
+
+    // 2) Original built-in sample words (kept as a safety net).
     const localData = dictionary[normalized];
-
     if (localData) {
-      renderWord(normalized, localData, true);
-      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      renderWord(normalized, localData, 'legacy');
+      reveal();
+      return;
+    }
+
+    // 3) Optional online lookup, only when there is a connection.
+    if (navigator.onLine === false) {
+      renderNotFound(normalized, miss, 'offline');
+      reveal();
       return;
     }
 
     result.innerHTML = `
       <article class="word-result-card">
-        <h3>Searching dictionary...</h3>
-        <p>Meaning aur Hindi translation dhoondh rahe hain...</p>
+        <h3>Searching online...</h3>
+        <p>Yeh word offline dictionary mein nahi mila. Online dhoondh rahe hain...</p>
       </article>`;
-
-    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    reveal();
 
     try {
-      const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(normalized)}`
-      );
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          result.innerHTML = `
-            <article class="word-result-card">
-              <h3>Word not found</h3>
-              <p>Spelling check karo ya koi doosra English word try karo.</p>
-            </article>`;
-          return;
-        }
-
-        throw new Error('Dictionary request failed');
-      }
-
-      const entries = await response.json();
-      const entry = entries[0];
-
-      if (!entry) throw new Error('No dictionary entry');
-
-      const phonetic =
-        entry.phonetic ||
-        entry.phonetics?.find(item => item.text)?.text ||
-        '';
-
-      const rawParts = (entry.meanings || [])
-        .flatMap(meaning =>
-          (meaning.definitions || []).map(definition => ({
-            part: meaning.partOfSpeech || 'Meaning',
-            definition: definition.definition || '',
-            example: definition.example || ''
-          }))
-        )
-        .slice(0, 4);
-
-      if (!rawParts.length) throw new Error('No definitions available');
-
-      // Hinglish meaning comes from the offline engine. If a definition is not fully
-      // understood, the original English definition is shown instead of a guess.
-      const parts = rawParts.map(item => {
-        const definition = item.definition || 'Definition unavailable.';
-        return {
-          part: item.part,
-          meaning: hinglishMeaning(item.definition, item.part) || definition,
-          definition,
-          example: item.example || 'Example sentence unavailable.',
-          translation: item.example
-            ? 'Example in English.'
-            : 'Example unavailable.'
-        };
-      });
-
-      renderWord(normalized, { phonetic, parts }, false);
+      const online = await fetchOnlineEntry(normalized);
+      if (online.missing) renderNotFound(normalized, miss, 'missing');
+      else renderWord(normalized, online, 'online');
     } catch (error) {
-      console.error('Word search failed:', error);
-
-      result.innerHTML = `
-        <article class="word-result-card">
-          <h3>Dictionary unavailable</h3>
-          <p>Internet connection check karo aur dobara search karo.</p>
-          <p>Hindi translation service bhi temporarily unavailable ho sakti hai.</p>
-        </article>`;
+      console.warn('Online word lookup failed:', error);
+      renderNotFound(normalized, miss, 'unreachable');
     }
   }
 
   $('#word-search-form')?.addEventListener('submit', event => {
     event.preventDefault();
     searchWord($('#word-input')?.value || '');
+  });
+
+  /* ------------------------------------------------------------------
+     Offline dictionary status line + suggestions while typing
+  ------------------------------------------------------------------ */
+  const dictStatus = $('#dict-status');
+
+  function renderDictStatus(info) {
+    if (!dictStatus || !info) return;
+    if (info.phase === 'ready') {
+      dictStatus.innerHTML = `<div class="dict-line"><span class="dict-chip is-ready">✓ Offline dictionary ready · ${info.words} words</span>${info.updating ? '<span class="dict-sub">Checking for updates…</span>' : ''}</div>`;
+    } else if (info.phase === 'downloading') {
+      const percent = info.bytesTotal ? Math.min(99, Math.round((info.bytesDone / info.bytesTotal) * 100)) : 0;
+      const size = info.bytesTotal ? ` · ${Math.round(info.bytesDone / 1024)} of ${Math.round(info.bytesTotal / 1024)} KB` : '';
+      dictStatus.innerHTML = `
+        <div class="dict-line"><span class="dict-chip is-busy">Setting up offline dictionary…</span><span class="dict-sub">${info.total ? `part ${Math.min(info.done + 1, info.total)} of ${info.total}${size}` : ''}</span></div>
+        <div class="dict-progress" role="progressbar" aria-label="Dictionary setup" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><i style="width:${percent}%"></i></div>
+        <span class="dict-sub">Offline use is not ready until this finishes.</span>`;
+    } else if (info.phase === 'incomplete') {
+      dictStatus.innerHTML = `
+        <div class="dict-line"><span class="dict-chip is-warn">Offline dictionary setup incomplete${info.total ? ` (${info.done}/${info.total} parts)` : ''}</span><button type="button" class="small-action" data-dict-retry>Retry</button></div>
+        <span class="dict-sub">${escapeHTML(info.message)}</span>`;
+    } else {
+      dictStatus.textContent = '';
+    }
+  }
+
+  dictStatus?.addEventListener('click', event => {
+    if (event.target.closest('[data-dict-retry]') && window.VocabDictionary) window.VocabDictionary.retry();
+  });
+
+  if (window.VocabDictionary) {
+    window.VocabDictionary.onChange(renderDictStatus);
+    renderDictStatus(window.VocabDictionary.getState());
+  }
+
+  const wordInput = $('#word-input');
+  const suggestionBox = $('#word-suggestions');
+  let suggestTimer;
+  let suggestToken = 0;
+
+  function hideSuggestions() {
+    clearTimeout(suggestTimer);
+    suggestToken += 1;
+    if (!suggestionBox) return;
+    suggestionBox.hidden = true;
+    suggestionBox.innerHTML = '';
+    wordInput?.setAttribute('aria-expanded', 'false');
+  }
+
+  async function showSuggestions() {
+    const query = (wordInput?.value || '').trim();
+    if (!window.VocabDictionary || !suggestionBox || query.length < 2) { hideSuggestions(); return; }
+    const token = ++suggestToken;
+    let items = [];
+    try { items = await window.VocabDictionary.suggest(query, 6); } catch (error) { items = []; }
+    if (token !== suggestToken) return;
+    if (!items.length) { hideSuggestions(); return; }
+    suggestionBox.innerHTML = items.map(item => `
+      <button type="button" role="option" aria-selected="false" class="word-suggestion" data-pick="${escapeHTML(item.word)}">
+        <strong>${escapeHTML(item.word)}</strong><span lang="hi">${escapeHTML(item.hi)}</span>
+      </button>`).join('');
+    suggestionBox.hidden = false;
+    wordInput?.setAttribute('aria-expanded', 'true');
+  }
+
+  wordInput?.addEventListener('input', () => {
+    clearTimeout(suggestTimer);
+    suggestTimer = setTimeout(showSuggestions, 70);
+  });
+  wordInput?.addEventListener('keydown', event => {
+    if (event.key === 'Escape') hideSuggestions();
+    if (event.key === 'ArrowDown' && suggestionBox && !suggestionBox.hidden) {
+      event.preventDefault();
+      suggestionBox.querySelector('button')?.focus();
+    }
+  });
+  suggestionBox?.addEventListener('keydown', event => {
+    const buttons = Array.from(suggestionBox.querySelectorAll('button'));
+    const index = buttons.indexOf(document.activeElement);
+    if (event.key === 'ArrowDown') { event.preventDefault(); buttons[Math.min(index + 1, buttons.length - 1)]?.focus(); }
+    if (event.key === 'ArrowUp') { event.preventDefault(); if (index <= 0) wordInput?.focus(); else buttons[index - 1].focus(); }
+    if (event.key === 'Escape') { hideSuggestions(); wordInput?.focus(); }
+  });
+  suggestionBox?.addEventListener('click', event => {
+    const pick = event.target.closest('[data-pick]');
+    if (!pick) return;
+    if (wordInput) wordInput.value = pick.dataset.pick;
+    searchWord(pick.dataset.pick);
+  });
+  document.addEventListener('click', event => {
+    if (!event.target.closest('#word-search-form') && !event.target.closest('#word-suggestions')) hideSuggestions();
   });
 
   function speakWord(word) {

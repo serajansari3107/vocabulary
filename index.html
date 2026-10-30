@@ -25,6 +25,8 @@
   <script src="js/grammar.js" defer></script>
   <script src="js/speaking-data.js" defer></script>
   <script src="js/speaking.js" defer></script>
+  <script src="js/dictionary.js" defer></script>
+  <script src="js/offline.js" defer></script>
   <script src="js/app.js" defer></script>
   <script src="js/pwa.js" defer></script>
 </head>
@@ -87,8 +89,10 @@
         <div class="page-intro"><div class="eyebrow"><span class="eyebrow-dot"></span> WORDS OPEN WORLDS</div><h1>Word <span>Explorer.</span></h1><p>Find a word. Understand its meaning. Make it yours.</p></div>
         <section class="search-panel">
           <label for="word-input">Which word are you curious about?</label>
-          <form id="word-search-form" class="search-form"><span class="search-icon">⌕</span><input id="word-input" type="search" placeholder="Try “ambitious”, “serendipity”..." autocomplete="off" required><button class="primary-button" type="submit">Explore word <span>→</span></button></form>
-          <div class="search-hint">Try any English word. We'll show available meanings and examples.</div>
+          <form id="word-search-form" class="search-form"><span class="search-icon">⌕</span><input id="word-input" type="search" placeholder="Try “ambitious”, “serendipity”..." autocomplete="off" autocapitalize="none" spellcheck="false" aria-controls="word-suggestions" aria-expanded="false" required><button class="primary-button" type="submit">Explore word <span>→</span></button></form>
+          <div id="word-suggestions" class="word-suggestions" role="listbox" aria-label="Word suggestions" hidden></div>
+          <div id="dict-status" class="dict-status" role="status" aria-live="polite"></div>
+          <div class="search-hint">Type an English word to see its Hindi meaning, synonyms and an example.</div>
         </section>
         <div id="word-result" class="word-result"><div class="result-placeholder"><div class="placeholder-icon">Aa</div><h2>Your next favourite word is waiting.</h2><p>Search for an English word to explore its meanings, examples and pronunciation.</p><div class="suggestion-list"><button data-word="curious">curious <span>↗</span></button><button data-word="ambitious">ambitious <span>↗</span></button><button data-word="resilient">resilient <span>↗</span></button><button data-word="serendipity">serendipity <span>↗</span></button></div></div></div>
         <footer class="footer-note">One word at a time, one step at a time. <span>✦</span></footer>
@@ -157,10 +161,11 @@
           <div class="panel-heading"><div><div class="eyebrow">APP SETTINGS</div><h2>About this app</h2></div></div>
           <div class="profile-list">
             <div class="profile-row static"><span class="profile-row-text"><strong>Your data stays on this device</strong><span>Saved words aur grammar progress is browser mein save hote hain.</span></span></div>
-            <div class="profile-row static"><span class="profile-row-text"><strong>Install &amp; offline</strong><span>Browser menu se “Install app” ya “Add to Home Screen” chuno. Grammar Academy offline bhi chalti hai.</span></span></div>
+            <div class="profile-row static"><span class="profile-row-text"><strong>Install the app</strong><span>Browser menu se “Install app” ya “Add to Home Screen” chuno. Offline status neeche dikhta hai.</span></span></div>
             <div class="profile-row static"><span class="profile-row-text"><strong>Theme, reminders, account</strong><span>Yeh settings abhi available nahi hain.</span></span><span class="tiny-badge">PLANNED</span></div>
           </div>
         </div>
+        <div id="offline-status"></div>
         <footer class="footer-note">Small steps. Big progress. <span>✦</span></footer>
       </section>
     </main>

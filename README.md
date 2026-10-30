@@ -28,3 +28,23 @@ Premium dark English-learning web app starter built with HTML, CSS and vanilla J
 The built-in dictionary is a small sample only. Any word not included shows a clear unavailable message; it does not fabricate a definition. A reliable broad dictionary source/API will be added in a later step. Saved words stay in this browser/device only.
 
 Speaking Studio voice features depend on the browser: Listen needs speech synthesis and an English voice on the device; the Speak button needs speech recognition (Chrome/Edge are the most reliable), microphone permission, https or localhost, and in Chrome an internet connection because the browser's own service does the recognition. Where a feature is missing the app says so and everything else keeps working. Speaking progress stays in this browser/device only.
+
+## Offline dictionary and offline-first app
+
+- Word Explorer searches a local dictionary (`data/dict/`, built from `tools/dictionary-src/`): Hindi meaning (Devanagari), synonyms, an English example and its Hindi translation. It handles upper/lower case, extra punctuation, common word forms (running -> run, went -> go) and spelling mistakes ("Did you mean...").
+- The dictionary is downloaded once (about 150 KB) and stored in IndexedDB. A progress bar shows the setup. "Offline dictionary ready" appears only after every part is downloaded, checked and stored; if anything fails the app says "setup incomplete" and can retry (finished parts are not downloaded again).
+- The app files are saved by the service worker (`sw.js`) the first time you open the app with internet. After that the app opens and works without internet. If a file cannot be saved, the install fails instead of pretending.
+- Your saved words and progress live in browser storage on your device. App and dictionary updates never delete them. Profile > Offline status shows what is really available offline.
+- Content in the dictionary was written for this project; no third-party dictionary data is included. To add words, edit/add rows in `tools/dictionary-src/*.json` (format: `[word, pos, hindi, [synonyms], english example, hindi example]`).
+
+### Before every commit
+
+```
+python3 tools/build-dictionary.py   # only if you changed dictionary rows; validates every row
+python3 tools/stamp-sw.py           # always: gives sw.js a new BUILD when any app file changed
+```
+
+If you forget `stamp-sw.py`, installed apps keep serving their old saved files.
+
+### Still needs internet
+First-time setup, app updates, Word Explorer lookups for words that are not in the offline dictionary (optional online fallback, English definition only), and in many browsers the Speak (microphone recognition) button. Listen uses voices installed on the device.
